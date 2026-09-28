@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Impromptu Speak — 1 minute on stage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="glow glow-a"></div>
+    <div class="glow glow-b"></div>
+
+    <header class="topbar">
+      <div class="mark">Impromptu Speak</div>
+      <p class="tag">One minute. One topic. Practice thinking on your feet.</p>
+    </header>
+
+    <main>
+      <section id="lobby" class="panel lobby">
+        <p class="kicker">Presentation warmup</p>
+        <h1>Step up and speak for 60 seconds.</h1>
+        <p class="lede">
+          You will get a random topic. Hit the mic, talk for one minute, and
+          watch your words appear as you go. Use it to practice openings,
+          structure, and staying calm when you have no slides.
+        </p>
+        <button id="start-btn" class="btn primary" type="button">
+          Give me a topic
+        </button>
+      </section>
+
+      <section id="stage" class="panel stage hidden" hidden>
+        <div class="topic-card">
+          <span class="kicker">Your topic</span>
+          <h2 id="topic-text"></h2>
+        </div>
+
+        <div class="timer-row">
+          <div class="clock" aria-live="polite">
+            <span id="time-display">1:00</span>
+            <span id="timer-label" class="clock-label">Ready</span>
+          </div>
+          <div class="ring-wrap" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle class="ring-track" cx="60" cy="60" r="52" />
+              <circle id="ring" class="ring-fill" cx="60" cy="60" r="52" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="mic-btn" class="mic" type="button" aria-pressed="false">
+            <span class="mic-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V7a3.5 3.5 0 1 0-7 0v5a3.5 3.5 0 0 0 3.5 3.5Z"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                />
+                <path
+                  d="M6 11.5a6 6 0 0 0 12 0M12 17.5V20"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+            <span id="mic-label">Start recording</span>
+          </button>
+          <button id="new-topic-btn" class="btn ghost" type="button">
+            New topic
+          </button>
+        </div>
+
+        <p id="status" class="status">Allow the microphone, then speak clearly.</p>
+
+        <div class="transcript-block">
+          <div class="transcript-head">
+            <h3>Speech to text</h3>
+            <span id="live-dot" class="live hidden">Listening</span>
+          </div>
+          <p id="transcript" class="transcript">
+            Your words will appear here as you speak.
+          </p>
+        </div>
+      </section>
+
+      <section id="review" class="panel review hidden" hidden>
+        <p class="kicker">Debrief</p>
+        <h2>How that minute went</h2>
+        <p id="review-topic" class="review-topic"></p>
+        <ul class="stats">
+          <li><strong id="stat-time">0:00</strong><span>spoken</span></li>
+          <li><strong id="stat-words">0</strong><span>words</span></li>
+          <li><strong id="stat-wpm">0</strong><span>words / min</span></li>
+        </ul>
+        <div class="transcript-block">
+          <h3>Transcript</h3>
+          <p id="final-transcript" class="transcript"></p>
+        </div>
+        <audio id="playback" class="playback" controls></audio>
+        <div class="controls">
+          <button id="again-btn" class="btn primary" type="button">
+            Try another topic
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Works best in Chrome or Edge. Speech recognition uses your browser — audio
+      stays on this device except what the browser sends to its speech service.
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
