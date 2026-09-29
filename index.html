@@ -18,32 +18,70 @@
 
     <header class="topbar">
       <div class="mark">Impromptu Speak</div>
-      <p class="tag">One minute. One topic. Practice thinking on your feet.</p>
+      <p class="tag">One topic. Speak at your pace. Practice thinking on your feet.</p>
     </header>
 
     <main>
       <section id="lobby" class="panel lobby">
         <p class="kicker">Presentation warmup</p>
-        <h1>Step up and speak for 60 seconds.</h1>
+        <h1>Step up and speak your mind.</h1>
         <p class="lede">
-          You will get a random topic. Hit the mic, talk for one minute, and
-          watch your words appear as you go. Use it to practice openings,
-          structure, and staying calm when you have no slides.
+          Choose a category or get a random prompt. Hit the mic, speak for as
+          long as you need, and stop the clock when you finish your topic.
+          Watch your words appear live and track your pacing and fillers.
         </p>
+        <div class="category-section">
+          <span class="kicker">Topic Category</span>
+          <div class="category-chips" id="lobby-categories" role="radiogroup" aria-label="Topic Category">
+            <button class="chip active" type="button" data-cat="all" role="radio" aria-checked="true">
+              <span class="chip-icon">✨</span> All Topics
+            </button>
+            <button class="chip" type="button" data-cat="science" role="radio" aria-checked="false">
+              <span class="chip-icon">🔬</span> Science & Tech
+            </button>
+            <button class="chip" type="button" data-cat="entertainment" role="radio" aria-checked="false">
+              <span class="chip-icon">🎬</span> Entertainment
+            </button>
+            <button class="chip" type="button" data-cat="philosophical" role="radio" aria-checked="false">
+              <span class="chip-icon">💭</span> Philosophical
+            </button>
+            <button class="chip" type="button" data-cat="work" role="radio" aria-checked="false">
+              <span class="chip-icon">💼</span> Work & Leadership
+            </button>
+            <button class="chip" type="button" data-cat="life" role="radio" aria-checked="false">
+              <span class="chip-icon">☕</span> Life & Society
+            </button>
+          </div>
+        </div>
         <button id="start-btn" class="btn primary" type="button">
           Give me a topic
         </button>
       </section>
 
       <section id="stage" class="panel stage hidden" hidden>
+        <div class="stage-category-bar">
+          <span class="stage-category-label">Category:</span>
+          <div class="category-chips compact" id="stage-categories" role="radiogroup" aria-label="Switch Category">
+            <button class="chip active" type="button" data-cat="all" role="radio" aria-checked="true">✨ All</button>
+            <button class="chip" type="button" data-cat="science" role="radio" aria-checked="false">🔬 Science</button>
+            <button class="chip" type="button" data-cat="entertainment" role="radio" aria-checked="false">🎬 Entertainment</button>
+            <button class="chip" type="button" data-cat="philosophical" role="radio" aria-checked="false">💭 Philosophical</button>
+            <button class="chip" type="button" data-cat="work" role="radio" aria-checked="false">💼 Work</button>
+            <button class="chip" type="button" data-cat="life" role="radio" aria-checked="false">☕ Life</button>
+          </div>
+        </div>
+
         <div class="topic-card">
-          <span class="kicker">Your topic</span>
+          <div class="topic-header">
+            <span id="stage-category-badge" class="badge category-badge">✨ All Topics</span>
+            <span id="stage-attempt-badge" class="badge attempt-badge hidden">Attempt 2 (Retry)</span>
+          </div>
           <h2 id="topic-text"></h2>
         </div>
 
         <div class="timer-row">
           <div class="clock" aria-live="polite">
-            <span id="time-display">1:00</span>
+            <span id="time-display">0:00</span>
             <span id="timer-label" class="clock-label">Ready</span>
           </div>
           <div class="ring-wrap" aria-hidden="true">
@@ -92,22 +130,88 @@
       </section>
 
       <section id="review" class="panel review hidden" hidden>
-        <p class="kicker">Debrief</p>
-        <h2>How that minute went</h2>
-        <p id="review-topic" class="review-topic"></p>
-        <ul class="stats">
-          <li><strong id="stat-time">0:00</strong><span>spoken</span></li>
-          <li><strong id="stat-words">0</strong><span>words</span></li>
-          <li><strong id="stat-wpm">0</strong><span>words / min</span></li>
-        </ul>
-        <div class="transcript-block">
-          <h3>Transcript</h3>
-          <p id="final-transcript" class="transcript"></p>
+        <div class="review-header">
+          <p id="review-kicker" class="kicker">Debrief</p>
+          <span id="review-badge" class="badge attempt-badge">Attempt 1</span>
         </div>
-        <audio id="playback" class="playback" controls></audio>
-        <div class="controls">
-          <button id="again-btn" class="btn primary" type="button">
-            Try another topic
+        <h2 id="review-title">How that minute went</h2>
+        <p id="review-topic" class="review-topic"></p>
+
+        <!-- Single attempt debrief -->
+        <div id="single-review">
+          <ul class="stats">
+            <li><strong id="stat-time">0:00</strong><span>spoken</span></li>
+            <li><strong id="stat-words">0</strong><span>words</span></li>
+            <li><strong id="stat-wpm">0</strong><span>words / min</span></li>
+          </ul>
+          <ul class="stats fillers">
+            <li><strong id="stat-so">0</strong><span>“so”</span></li>
+            <li><strong id="stat-like">0</strong><span>“like”</span></li>
+            <li><strong id="stat-pauses">0</strong><span>long pauses (5s+)</span></li>
+          </ul>
+          <p id="confidence-note" class="confidence"></p>
+          <div class="transcript-block">
+            <h3>Transcript</h3>
+            <p id="final-transcript" class="transcript"></p>
+          </div>
+          <audio id="playback" class="playback" controls></audio>
+          <div class="try-again-prompt">
+            <p>💡 Want to see if you can do better? Hit <strong>Try again with this topic</strong> to speak on the same topic and compare both speeches side-by-side.</p>
+          </div>
+        </div>
+
+        <!-- Comparison debrief (Attempt 1 vs Attempt 2) -->
+        <div id="comparison-review" class="hidden" hidden>
+          <div id="comparison-banner" class="comparison-banner"></div>
+
+          <div class="comparison-table-wrap">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th scope="col">Metric</th>
+                  <th scope="col">Attempt 1</th>
+                  <th scope="col">Attempt 2</th>
+                  <th scope="col">Change</th>
+                </tr>
+              </thead>
+              <tbody id="comparison-tbody">
+              </tbody>
+            </table>
+          </div>
+
+          <div class="comparison-grid">
+            <div class="attempt-card">
+              <div class="attempt-card-head">
+                <span class="badge">Attempt 1</span>
+                <span id="card1-meta" class="attempt-meta"></span>
+              </div>
+              <audio id="playback-1" class="playback" controls></audio>
+              <div class="transcript-block">
+                <h3>Transcript</h3>
+                <p id="transcript-1" class="transcript"></p>
+              </div>
+            </div>
+
+            <div class="attempt-card highlight-card">
+              <div class="attempt-card-head">
+                <span class="badge accent">Attempt 2</span>
+                <span id="card2-meta" class="attempt-meta"></span>
+              </div>
+              <audio id="playback-2" class="playback" controls></audio>
+              <div class="transcript-block">
+                <h3>Transcript</h3>
+                <p id="transcript-2" class="transcript"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls review-controls">
+          <button id="retry-btn" class="btn primary" type="button">
+            Try again with this topic
+          </button>
+          <button id="again-btn" class="btn ghost" type="button">
+            Choose a new topic
           </button>
         </div>
       </section>
